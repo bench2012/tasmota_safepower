@@ -1,0 +1,16 @@
+## First Short press turn on  Relay 1, 2nd short press turn on Relay 2 When  Long press turn Relay 5 on and start a timer for 30sec, when it reach zero, it  turn off Relay 1
+## 3rd press turn Relay 1 and 5 off, wait 30 sec, then turn Relay1 on again
+PowerOnState 0
+Backlog SwitchMode1 5; SetOption32 20; SetOption114 1
+Rule1
+  ON System#Boot DO Backlog WebButton1 Power; WebButton2 Shutdown; BlinkCount 1; BlinkTime 2; SetOption53 1; SetOption55 1; TCPBaudRate 115200; TCPStart 8888 ENDON
+  ON switch1#state==2 DO Backlog add1 1 ENDON
+  ON switch1#state==3 DO Backlog var1 4 ENDON
+  ON var1#state==1 DO Backlog Power2 0;Power 1 ENDON
+  ON var1#state==2 DO Backlog Power2 3 ENDON
+  ON var1#state==3 DO Backlog Power2 0; Power1 0; Delay 30; Power 1; var1 1 ENDON  
+  ON rules#timer=1 DO Backlog Power1 0; var1 0  ENDON
+  ON var1#state==4 DO Backlog Power2 3; ruletimer1 30;var1 0 ENDON
+  ON var1#state>4 DO var1 0;
+Rule1 1
+
